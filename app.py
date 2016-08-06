@@ -16,8 +16,9 @@ def index():
     return render_template('index.html')
 
 def gen(camera):
-    while True:
-        frame = camera.get_frame()
+    flag = True
+    while flag:
+        frame,flag = camera.get_frame()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
@@ -39,7 +40,7 @@ def video_push_cache():
     cache_db.setex(curimage_key,content,timeout)
 
     #生成序列组
-    image_indexs = range(1,11)
+    image_indexs = range(0,10)
     image_keys = cache_db.hmget('images',image_indexs)
     image_keys = image_keys[1:]
     image_keys.append(curimage_key)
